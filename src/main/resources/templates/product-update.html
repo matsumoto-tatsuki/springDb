@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>商品情報更新</title>
+  <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>商品情報更新</h1>
+
+
+<form th:action="@{{id}(id=${productId})}" method="post" th:object="${productForm}">
+  <table>
+    <tr>
+      <td>id:</td>
+      <td><p th:text="${productId}"></p></td>
+    </tr>
+    <tr>
+      <td><p th:text="#{form.lbl.productName}"></p></td>
+      <td><input type="text" th:field="*{name}"></td>
+      <td><div class="error" th:each="error: ${#fields.errors('name')}">
+        [[ ${error} ]]
+      </div></td>
+    </tr>
+    <tr>
+      <td><p th:text="#{form.lbl.productPrice}"></td>
+      <td><input type="text" th:field="*{price}"></td>
+      <td>
+        <div class="error" th:each="error: ${#fields.errors('price')}">
+          [[ ${error} ]]
+        </div>
+      </td>
+    </tr>
+  </table>
+  <button type="submit" th:text="#{form.btn.add}"></button>
+</form>
+</body>
+</html>

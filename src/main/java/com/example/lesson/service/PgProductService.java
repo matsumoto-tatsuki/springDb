@@ -14,6 +14,10 @@ public class PgProductService implements ProductService{
     private ProductDao productDao;
 
     @Override
+    public int allDataNum(){
+        return productDao.allDataNum();
+    }
+    @Override
     public List<ProductRecord> findAll(){
         return productDao.findAll();
     }

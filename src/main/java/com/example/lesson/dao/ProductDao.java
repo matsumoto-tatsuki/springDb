@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.DataClassRowMapper;
 import java.util.List;
 
 public interface ProductDao {
+     int allDataNum();
      List<ProductRecord> findAll();
      ProductRecord findById(int id);
 

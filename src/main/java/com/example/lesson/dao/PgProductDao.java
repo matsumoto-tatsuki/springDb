@@ -18,6 +18,12 @@ public class PgProductDao implements ProductDao{
     private NamedParameterJdbcTemplate jdbcTemplate;
 
 
+    @Override
+    public int allDataNum() {
+        var list = jdbcTemplate.query("SELECT id, name, price FROM products ORDER BY id",
+                new DataClassRowMapper<>(ProductRecord.class));
+        return list.size() + 101;
+    }
     public List<ProductRecord> findAll() {
         return jdbcTemplate.query("SELECT id, name, price FROM products ORDER BY id",
                 new DataClassRowMapper<>(ProductRecord.class));

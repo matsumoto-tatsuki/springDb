@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>User管理</title>
+</head>
+<body>
+    <div id="app">
+        <my-component></my-component>
+        <h1>{{ title }}</h1>
+        {{ count }}
+        {{editId}}
+
+        <div id="add-area">
+            <p>名前：<input v-model="newName">{{newName}}</p>
+            <p>メール：<input v-model="newAddress">{{newAddress}}</p>
+            <p><button @click="addUser">追加</button></p>
+        </div>
+
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>名前</th>
+                <th>メール</th>
+                <th>編集</th>
+                <th>削除</th>
+            </tr>
+            <tr v-for="user in users">
+                <td>{{user.id}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.mail}}</td>
+                <td><button type="button" v-bind:value="user.id" @click="edit(user.id)">編集</button></td>
+                <td><button type="button" v-bind:value="user.id">削除</button></td>
+            </tr>
+        </table>
+
+        <div id="edit-area">
+            <p>名前：<input v-model="editName"></p>
+            <p>メール：<input v-model="editAddress"></p>
+            <p><button @click="updateUser">更新</button></p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        
+    <script>
+        //オブジェクト生成
+        const {createApp} = Vue;
+
+        createApp({
+            data(){
+                return{
+                    count: 0,
+                    title: 'Hello Vue!',
+                    newName: '',
+                    newAddress:'',
+                    editId:'' ,
+                    editName:'',
+                    editAddress:'',
+                    users:[]
+                }
+            },
+            methods:{
+                countUp(){
+                    this.count += 1;
+                },
+                addUser(){
+                    this.users.push({
+                        id:10,
+                        name: this.newName,
+                        mail: this.newAddress
+                    })
+                },
+                edit(id){
+                    const targetUser = this.users.find(user => user.id === id);
+                    this.editId = targetUser.id;
+                    this.editName = targetUser.name;
+                    this.editAddress = targetUser.mail;
+                },
+                updateUser(){
+                    const targetUser = this.users.find(user => user.id === this.editId);
+                
+                    targetUser.name= this.editName;
+                    targetUser.mail=this.editAddress;
+                },
+            },
+            created: function(){
+                console.log('created');
+                this.users = [
+                    {
+                        id:1,
+                        name:'test1',
+                        mail:'test1@example.com'
+                    },
+                    {
+                        id:2,
+                        name:'test2',
+                        mail:'test2@example.com'
+                    },
+                    {
+                        id:3,
+                        name:'test3',
+                        mail:'test3@example.com'
+                    }
+                ]
+            }
+
+        }).mount('#app')
+        //mountでid指定
+        
+    </script>
+    
+</body>
+</html>

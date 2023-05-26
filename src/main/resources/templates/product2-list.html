@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>商品一覧</title>
+</head>
+<body>
+<h1>商品一覧</h1>
+<table border="1" id="table">
+
+</table>
+
+<p><button id="output">商品表示</button> <button id="input">新規登録</button> <button id="update">更新処理</button></p>
+
+<h1 id="setting"></h1>
+<table id="setTable">
+
+</table>
+
+<h1 id="setting2"></h1>
+<table id="setTable2">
+
+</table>
+<script>
+  'use strict';
+  document.getElementById('output').addEventListener('click', () => {
+    getProducts();
+    document.getElementById('output').disabled = true;
+  });
+
+  document.getElementById('input').addEventListener('click', () => {
+    
+    document.getElementById('setting').textContent="新規登録"
+    const table = document.getElementById('setTable');
+
+
+    const newTr1 = document.createElement('tr');
+    
+    const newTdLabel1 = document.createElement('td');
+    newTdLabel1.textContent = "名前:";
+    newTr1.appendChild(newTdLabel1);
+
+    const newTdText1 = document.createElement('td');
+    const newInputText1 = document.createElement('input');
+    newInputText1.type="text";
+    newInputText1.id="addTextName";
+    newTdText1.appendChild(newInputText1);
+    newTr1.appendChild(newTdText1);
+
+    const newTr2 = document.createElement('tr');
+    
+    const newTdLabel2 = document.createElement('td');
+    newTdLabel2.textContent = "値段:";
+    newTr2.appendChild(newTdLabel2);
+
+    const newTdText2 = document.createElement('td');
+    const newInputText2 = document.createElement('input');
+    newInputText2.type="text";
+    newInputText2.id="addTextPrice";
+    newTdText2.appendChild(newInputText2);
+    newTr2.appendChild(newTdText2);
+
+    table.appendChild(newTr1);
+    table.appendChild(newTr2);
+      
+    const button = document.createElement('button');
+    button.id="addDb";
+    button.textContent = '追加';
+    table.append(button);
+
+    document.getElementById('input').disabled = true;
+
+
+    document.getElementById('addDb').addEventListener('click', () => {
+      let data =new URLSearchParams();
+      const name = document.getElementById('addTextName').value;
+      const price = document.getElementById('addTextPrice').value;
+      data.append('name',name);
+      data.append('price',price);
+      fetch('/api/product',{
+        method:'POST',
+        body:data,
+      }).then(res => {
+          if(res.status === 400) {
+            console.log('error')
+          } else {
+            res.json()
+            .then(data => {
+              getProducts();
+              window.alert('追加しました');
+
+            })
+          }
+      });
+    });
+  });
+
+  document.getElementById('update').addEventListener('click', () => {
+    
+    document.getElementById('setting2').textContent="更新処理"
+    const table = document.getElementById('setTable2');
+
+    const newTr = document.createElement('tr');
+    
+    const newTdLabel = document.createElement('td');
+    newTdLabel.textContent = "ID:";
+    newTr.appendChild(newTdLabel);
+
+    const newTdText = document.createElement('td');
+    newTdText.textContent = '1';
+    newTdText.id='productId';
+    newTr.appendChild(newTdText);
+
+    const newTr1 = document.createElement('tr');
+    
+    const newTdLabel1 = document.createElement('td');
+    newTdLabel1.textContent = "名前:";
+    newTr1.appendChild(newTdLabel1);
+
+    const newTdText1 = document.createElement('td');
+    const newInputText1 = document.createElement('input');
+    newInputText1.type="text";
+    newInputText1.id="textName";
+    newTdText1.appendChild(newInputText1);
+    newTr1.appendChild(newTdText1);
+
+    const newTr2 = document.createElement('tr');
+    
+    const newTdLabel2 = document.createElement('td');
+    newTdLabel2.textContent = "値段:";
+    newTr2.appendChild(newTdLabel2);
+
+    const newTdText2 = document.createElement('td');
+    const newInputText2 = document.createElement('input');
+    newInputText2.type="text";
+    newInputText2.id="textPrice";
+    newTdText2.appendChild(newInputText2);
+    newTr2.appendChild(newTdText2);
+
+    table.appendChild(newTr);
+    table.appendChild(newTr1);
+    table.appendChild(newTr2);
+
+    const newP = document.createElement('p');  
+    const updateButton = document.createElement('button');
+    const deleteButton = document.createElement('button');
+    updateButton.id="updateDb";
+    deleteButton.id="deleteDb"
+    updateButton.textContent = '更新';
+    deleteButton.textContent='削除';
+    newP.appendChild(updateButton);
+    newP.appendChild(deleteButton);
+    table.append(newP);
+    document.getElementById('update').disabled = true;
+
+    document.getElementById('updateDb').addEventListener('click', () => {
+      let data =new URLSearchParams();
+      const id = document.getElementById('productId').textContent;
+      const name = document.getElementById('textName').value;
+      const price = document.getElementById('textPrice').value;
+      data.append('name',name);
+      data.append('price',price);
+      fetch(`/api/product/${id}`,{
+        method:'PUT',
+        body:data,
+      }).then(res => {
+          if(res.status === 400) {
+            console.log('error')
+          } else {
+            res.json()
+            .then(data => {
+              getProducts();
+              window.alert('更新しました');
+
+            })
+          }
+      });
+    });
+
+    document.getElementById('deleteDb').addEventListener('click', () => {
+      let data =new URLSearchParams();
+      const id = document.getElementById('productId').textContent;
+      fetch(`/api/product/${id}`,{
+        method:'DELETE',
+        body:data,
+      }).then(res => {
+          if(res.status === 400) {
+            console.log('error')
+          } else {
+            res.json()
+            .then(data => {
+              getProducts();
+              window.alert('削除しました');
+
+            })
+          }
+      });
+    });
+
+    
+  });
+
+  function handleRadioClick() {
+    const radios = document.getElementsByName('id');
+
+    // 選択されたラジオボタンの値を取得
+    let selectedValue;
+    for (var i = 0; i < radios.length; i++) {
+      if (radios[i].checked) {
+        selectedValue = radios[i].value;
+        break;
+      }
+    }
+    console.log(selectedValue);
+    
+
+    fetch(`/api/products/${selectedValue}`)
+      .then(res => {
+        if(res.status === 400) {
+          console.log('error')
+        } else {
+          res.json()
+          .then(data => {
+            
+            document.getElementById('productId').textContent = data.id;
+            document.getElementById('textName').value = data.name;
+            document.getElementById('textPrice').value = data.price;
+            
+          })
+        }
+    });
+  }
+  function getProducts() {
+    const table = document.getElementById('table');
+    table.innerHTML = 0;
+    let strhtml='';
+      fetch('/api/products')
+      .then(res => {
+        if(res.status === 400) {
+          console.log('error')
+        } else {
+          res.json()
+          .then(data => {
+            console.log(data)
+            strhtml += `<tr><td></td><th>ID</th><th>名前</th><th>値段</th></tr>`;
+            for(let i=0;i<data.length;i++){
+
+              const dataId = data[i].id;
+              const dataName = data[i].name;
+              const dataPrice = data[i].price;
+
+              strhtml += `<tr><td><input type="radio" name="id" value="${dataId}" onclick="handleRadioClick()"</td><td>${dataId}</td><td>${dataName}</td><td>${dataPrice}</td></tr>`;
+               
+            }
+            table.innerHTML = strhtml;
+          })
+        }
+    });
+  }
+
+  
+
+</script>
+</body>
+</html>

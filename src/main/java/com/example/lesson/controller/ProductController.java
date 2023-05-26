@@ -95,4 +95,20 @@ public class ProductController {
         System.out.println(id);
         return "redirect:/product-list";
     }
+
+    @GetMapping("/error404")
+    public String error(Model model) {
+        return "/error404";
+    }
+
+
+    @GetMapping("/product2-list")
+    public String list2(Model model) {
+        return "/product2-list";
+    }
+
+    @GetMapping("/product2")
+    public String add(Model model) {
+        return "/product2-add";
+    }
 }

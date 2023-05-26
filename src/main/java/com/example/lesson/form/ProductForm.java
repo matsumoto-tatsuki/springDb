@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Range;
 
 @Data
 public class ProductForm {
-    @NotBlank()
+    @NotBlank
     @Length(min = 1, max = 50)
     private String name;
     @NotBlank

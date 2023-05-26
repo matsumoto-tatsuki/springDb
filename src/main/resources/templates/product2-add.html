@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>商品追加</title>
+
+  <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>商品追加</h1>
+<form>
+  <table>
+    <tr>
+      <td><p>名前：</p></td>
+      <td><input type="text" id="name"></td>
+    </tr>
+
+    <tr>
+      <td><p>値段：</p></td>
+      <td><input type="text" id="price"></td>
+    </tr>
+  </table>
+
+  <button id="addBtn">追加</button>
+</form>
+<script>
+
+'use strict';
+  document.getElementById('addBtn').addEventListener('click', () => {
+    fetch('/api/products/id')
+      .then(res => {
+        if(res.status === 400) {
+          console.log('error')
+        } else {
+          res.json()
+          .then(data => {
+            console.log(data)
+            for(let i=0;i<data.length;i++){
+              const newTr = document.createElement('tr');
+              const newTdId = document.createElement('td');
+              const newTdName = document.createElement('td');
+              const newTdPrice = document.createElement('td');
+
+              newTdId.textContent = data[i].id;
+              newTdName.textContent = data[i].name;
+              newTdPrice.textContent = data[i].price;
+              newTr.appendChild(newTdId);
+              newTr.appendChild(newTdName);
+              newTr.appendChild(newTdPrice);
+              
+              document.getElementById('table').appendChild(newTr);
+            }
+          })
+        }
+    });
+  });
+</script>
+</body>
+</html>
